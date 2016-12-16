@@ -3,10 +3,13 @@ class NegociacaoController {
 	adiciona(event) {
 		event.preventDefault();
 
-		let data = new Date(...normalizeDate($("#data").value));
+		let data = DateHelper.formataData($("#data").value);
 		let quantidade = $('#quantidade').value;
 		let valor = $('#valor').value;
 
-		console.log({"data":data,"quantidade":quantidade,"valor":valor});
+		let negociacao = new Negociacao(data, quantidade, valor);
+
+		console.log(negociacao);
+		console.log(DateHelper.formataData(negociacao.data));
 	}
 }
