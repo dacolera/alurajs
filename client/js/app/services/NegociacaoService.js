@@ -1,74 +1,69 @@
 class NegociacaoService {
 
+	constructor() {
+		this._http = new HttpService();
+	}
+
 	obterNegociacoesDaSemana() {
 
 		return new Promise((resolve, reject) => {
-			let xhr = new XMLHttpRequest();
-
-			xhr.open('GET', 'negociacoes/semana');
-
-			xhr.onreadystatechange = function() {
-
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						resolve(JSON.parse(xhr.response)
-							.map(obj => new Negociacao(new Date(obj.data), obj.quantidade, obj.valor))
-						);
-					} else {
-						reject("Erro ao tentar obter as negociacoes da semana.");
-					}
-				}
-			};
-
-			xhr.send();
+			this._http.get('negociacoes/semana')
+				.then(negociacoes =>
+					resolve(
+						negociacoes.map(
+							obj => new Negociacao(
+								new Date(obj.data),
+								obj.quantidade,
+								obj.valor
+							)
+						)
+					)
+				)
+				.catch(err =>
+					reject("Erro ao tentar obter as negociacoes da semana.")
+				);
 		});
 	}
 
 	obterNegociacoesDaSemanaAnterior() {
 
 		return new Promise((resolve, reject) => {
-			let xhr = new XMLHttpRequest();
-
-			xhr.open('GET', 'negociacoes/anterior');
-
-			xhr.onreadystatechange = function() {
-
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						resolve(JSON.parse(xhr.response)
-							.map(obj => new Negociacao(new Date(obj.data), obj.quantidade, obj.valor))
-						);
-					} else {
-						reject("Erro ao tentar obter as negociacoes da semana anterior.");
-					}
-				}
-			};
-
-			xhr.send();
+			this._http.get('negociacoes/anterior')
+				.then(negociacoes =>
+					resolve(
+						negociacoes.map(
+							obj => new Negociacao(
+								new Date(obj.data),
+								obj.quantidade,
+								obj.valor
+							)
+						)
+					)
+				)
+				.catch(err =>
+					reject("Erro ao tentar obter as negociacoes da semana anterior.")
+				);
 		});
 	}
 
 	obterNegociacoesDaSemanaRetrasada() {
 
 		return new Promise((resolve, reject) => {
-			let xhr = new XMLHttpRequest();
-
-			xhr.open('GET', 'negociacoes/retrasada');
-
-			xhr.onreadystatechange = function() {
-
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						resolve(JSON.parse(xhr.response)
-							.map(obj => new Negociacao(new Date(obj.data), obj.quantidade, obj.valor))
-						);
-					} else {
-						reject("Erro ao tentar obter as negociacoes da semana retrasada.");
-					}
-				}
-			};
-
-			xhr.send();
+			this._http.get('negociacoes/retrasada')
+				.then(negociacoes =>
+					resolve(
+						negociacoes.map(
+							obj => new Negociacao(
+								new Date(obj.data),
+								obj.quantidade,
+								obj.valor
+							)
+						)
+					)
+				)
+				.catch(err =>
+					reject("Erro ao tentar obter as negociacoes da semana retrasada.")
+				);
 		});
 	}
 }
