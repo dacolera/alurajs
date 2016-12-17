@@ -17,13 +17,13 @@ class NegociacaoController {
 		this._negociacoes_proxy = ProxyFactory.create(
 			this._listaNegociacoes,
 			['adiciona', 'apaga'],
-			model => this._negociacoesView.update(this._listaNegociacoes)
+			model => this._negociacoesView.update(model)
 		);
 
 		this._mensagens_proxy = ProxyFactory.create(
 			this._mensagens,
 			['texto'],
-			model => this._mensagensView.update(this._mensagens)
+			model => this._mensagensView.update(model)
 		);
 	}
 
