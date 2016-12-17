@@ -8,13 +8,14 @@ class NegociacaoController {
 		this._negociacoes = new Bind(
 			new ListaNegociacoes(),
 			new NegociacoesView($("#negociacoes")),
-			['adiciona', 'apaga']
+			'adiciona',
+			'apaga'
 		);
 
 		this._mensagens = new Bind(
 			new Mensagens(),
 			new MensagensView($('#mensagens')),
-			['texto']
+			'texto'
 		);
 	}
 
