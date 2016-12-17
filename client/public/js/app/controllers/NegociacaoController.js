@@ -6,40 +6,34 @@ class NegociacaoController {
 		this._valorInput = $("#valor");
 
 		this._listaNegociacoes = new ListaNegociacoes();
+		this._mensagens = new Mensagens();
 
 		this._negociacoesView = new NegociacoesView($("#negociacoes"));
 		this._negociacoesView.update(this._listaNegociacoes);
 
-		this._mensagens = new Mensagens();
 		this._mensagensView = new MensagensView($('#mensagens'));
 		this._mensagensView.update(this._mensagens);
-		this._negociacoes_proxy = {};
+
+		this._negociacoes_proxy = ProxyFactory.create(
+			this._listaNegociacoes,
+			['adiciona', 'apaga'],
+			model => this._negociacoesView.update(this._listaNegociacoes)
+		);
+
+		this._mensagens_proxy = ProxyFactory.create(
+			this._mensagens,
+			['texto'],
+			model => this._mensagensView.update(this._mensagens)
+		);
 	}
 
 	adiciona(event) {
 
 		event.preventDefault();
 
-		let self = this;
-		this._negociacoes_proxy = new Proxy(this._listaNegociacoes, {
-
-			get(target, prop, proxy) {
-
-				if (['adiciona', 'apaga'].includes(prop) && typeof(target[prop]) === typeof(Function)) {
-
-					return function() {
-						Reflect.apply(target[prop], target, arguments);
-						self._negociacoesView.update(target);
-					};
-				}
-				return Reflect.get(target, prop, proxy);
-			}
-		});
-
 		this._negociacoes_proxy.adiciona(this._criaNegociacao());
 
-		this._mensagens.texto = 'Negociação cadastrada com sucesso !';
-		this._mensagensView.update(this._mensagens);
+		this._mensagens_proxy.texto = 'Negociação cadastrada com sucesso !';
 
 		this._limpaFormulario();
 	}
@@ -63,7 +57,6 @@ class NegociacaoController {
 
 	apagar() {
 		this._negociacoes_proxy.apaga();
-		this._mensagens.texto = 'Negociações apagadas com sucesso !';
-		this._mensagensView.update(this._mensagens);
+		this._mensagens_proxy.texto = 'Negociações apagadas com sucesso !';
 	}
 }
