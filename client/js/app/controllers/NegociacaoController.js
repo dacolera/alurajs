@@ -47,6 +47,29 @@ class NegociacaoController {
 		);
 	}
 
+	importaNegociacoes() {
+
+		let xhr = new XMLHttpRequest();
+		let self = this;
+		xhr.open('GET', 'negociacoes/semana');
+
+		xhr.onreadystatechange = function() {
+
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
+					JSON.parse(xhr.response)
+					.map(obj => new Negociacao(new Date(obj.data), obj.quantidade, obj.valor))
+					.forEach(negociacao => self._negociacoes.adiciona(negociacao));
+					self._mensagens.texto = "Negociacoes importadas com sucesso !";
+				} else {
+					self._mensagens.texto = "Nao foi possivel importar as negociacoes !";
+				}
+			}
+		};
+
+		xhr.send();
+	}
+
 	apagar() {
 		this._negociacoes.apaga();
 		this._mensagens.texto = 'Negociações apagadas com sucesso !';
