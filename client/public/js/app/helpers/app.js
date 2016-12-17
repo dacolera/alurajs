@@ -1,3 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
- 	window.$ = document.querySelector.bind(document);
-});
+;(function(document, window, undefined){
+
+	window.$ = document.querySelector.bind(document);
+})(document, window);
