@@ -5,25 +5,16 @@ class NegociacaoController {
 		this._quantidadeInput = $("#quantidade");
 		this._valorInput = $("#valor");
 
-		this._listaNegociacoes = new ListaNegociacoes();
-		this._mensagens = new Mensagens();
-
-		this._negociacoesView = new NegociacoesView($("#negociacoes"));
-		this._negociacoesView.update(this._listaNegociacoes);
-
-		this._mensagensView = new MensagensView($('#mensagens'));
-		this._mensagensView.update(this._mensagens);
-
-		this._negociacoes_proxy = ProxyFactory.create(
-			this._listaNegociacoes,
-			['adiciona', 'apaga'],
-			model => this._negociacoesView.update(model)
+		this._negociacoes = new Bind(
+			new ListaNegociacoes(),
+			new NegociacoesView($("#negociacoes")),
+			['adiciona', 'apaga']
 		);
 
-		this._mensagens_proxy = ProxyFactory.create(
-			this._mensagens,
-			['texto'],
-			model => this._mensagensView.update(model)
+		this._mensagens = new Bind(
+			new Mensagens(),
+			new MensagensView($('#mensagens')),
+			['texto']
 		);
 	}
 
@@ -31,9 +22,9 @@ class NegociacaoController {
 
 		event.preventDefault();
 
-		this._negociacoes_proxy.adiciona(this._criaNegociacao());
+		this._negociacoes.adiciona(this._criaNegociacao());
 
-		this._mensagens_proxy.texto = 'Negociação cadastrada com sucesso !';
+		this._mensagens.texto = 'Negociação cadastrada com sucesso !';
 
 		this._limpaFormulario();
 	}
@@ -56,7 +47,7 @@ class NegociacaoController {
 	}
 
 	apagar() {
-		this._negociacoes_proxy.apaga();
-		this._mensagens_proxy.texto = 'Negociações apagadas com sucesso !';
+		this._negociacoes.apaga();
+		this._mensagens.texto = 'Negociações apagadas com sucesso !';
 	}
 }
