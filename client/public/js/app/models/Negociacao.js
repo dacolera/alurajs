@@ -8,7 +8,7 @@ class Negociacao {
 	}
 
 	get data() {
-		return new Date(this._data.getTime()); 
+		return new Date(this._data.getTime());
 	}
 
 	get quantidade() {
@@ -20,6 +20,6 @@ class Negociacao {
 	}
 
 	get volume() {
-		return this._quantidade * this._valor; 
+		return this._quantidade * this._valor;
 	}
 }
