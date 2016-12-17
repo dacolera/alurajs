@@ -1,25 +1,25 @@
 class HttpService {
 
-	get(url) {
+    get(url) {
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			let xhr = new XMLHttpRequest();
+            let xhr = new XMLHttpRequest();
 
-			xhr.open('GET', url);
+            xhr.open('GET', url);
 
-			xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function() {
 
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						resolve(JSON.parse(xhr.responseText))
-					} else {
-						reject(xhr.responseText);
-					}
-				}
-			};
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        resolve(JSON.parse(xhr.responseText))
+                    } else {
+                        reject(xhr.responseText);
+                    }
+                }
+            };
 
-			xhr.send();
-		});
-	}
+            xhr.send();
+        });
+    }
 }
