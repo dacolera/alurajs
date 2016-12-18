@@ -10,7 +10,8 @@ var ConnectionFactory = (function(){
         stores : [
             'negociacoes'
         ],
-        connection : null
+        connection : null,
+        close : null
     };
 
     return class ConnectionFactory {
@@ -27,7 +28,15 @@ var ConnectionFactory = (function(){
                 openRequest.onupgradeneeded = e => ConnectionFactory._createStore(e.target.result);
 
                 openRequest.onsuccess = e => {
-                    config.connection = null !== config.connection ? config.connection : e.target.result;
+
+                    if (null === config.connection) {
+                        config.connection = e.target.result;
+                        config.close = config.connection.close.bind(config.connection);
+
+                        config.connection.close = function() {
+                            throw new Error("Você não pode fechar diretamente a conexão!");
+                        }
+                    }
                     resolve(config.connection);
                 }
 
@@ -46,6 +55,14 @@ var ConnectionFactory = (function(){
                 connection.createObjectStore(store, { autoIncrement: true });
             });
         }
-    }
 
+        static closeConnection() {
+
+            if(config.connection) {
+                config.close();
+                config.connection = null;
+                config.close = null;
+            }
+        }
+    }
 })();
