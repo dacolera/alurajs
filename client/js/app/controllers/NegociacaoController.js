@@ -20,6 +20,14 @@ class NegociacaoController {
             new MensagensView($('#mensagens')),
             'texto'
         );
+
+        ConnectionFactory
+            .getConnection()
+            .then(connection => new NegociacoesDao(connection))
+            .then(dao => dao.listaTodos())
+            .then(negociacoes =>
+                negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))
+            ).catch(err => this._mensagens.texto = err);
     }
 
     adiciona(event) {
@@ -29,18 +37,15 @@ class NegociacaoController {
         let negociacao = this._criaNegociacao();
 
         ConnectionFactory
-        .getConnection()
-        .then(connection => {
-        new NegociacoesDao(connection)
-            .adiciona(negociacao)
+            .getConnection()
+            .then(connection => new NegociacoesDao(connection))
+            .then(dao => dao.adiciona(negociacao))
             .then(() => {
                 this._listaNegociacoes.adiciona(this._criaNegociacao());
                 this._mensagens.texto = 'Negociação cadastrada com sucesso !';
                 this._limpaFormulario();
             })
             .catch(err => this._mensagens.texto = err);
-        })
-        .catch(err => this._mensagens.texto = err);
     }
 
     _limpaFormulario() {
@@ -79,8 +84,15 @@ class NegociacaoController {
     }
 
     apagar() {
-        this._listaNegociacoes.apaga();
-        this._mensagens.texto = 'Negociações apagadas com sucesso !';
+
+        ConnectionFactory
+            .getConnection()
+            .then(connection => new NegociacoesDao(connection))
+            .then(dao => dao.apagaTodos())
+            .then(msg => {
+                this._listaNegociacoes.apaga();
+                this._mensagens.texto = msg;
+            }).catch(err => this._mensagens.texto = err);
     }
 
     ordena(coluna) {
