@@ -77,6 +77,11 @@ class NegociacaoController {
         .then(negociacoes => {
             negociacoes
             .reduce((flatArray, array) => flatArray.concat(array) , [])
+            .filter(negociacao =>
+                !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
+                    JSON.stringify(negociacaoExistente) == JSON.stringify(negociacao)
+                )
+            )
             .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
             this._mensagens.texto = "Negociacoes importadas com sucesso !";
         })
