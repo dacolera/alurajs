@@ -21,6 +21,10 @@ class NegociacaoController {
             'texto'
         );
 
+        this._init();
+    }
+
+    _init() {
         ConnectionFactory
             .getConnection()
             .then(connection => new NegociacoesDao(connection))
@@ -28,6 +32,8 @@ class NegociacaoController {
             .then(negociacoes =>
                 negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))
             ).catch(err => this._mensagens.texto = err);
+
+            setInterval(() => this.importaNegociacoes(), 5000);
     }
 
     adiciona(event) {
