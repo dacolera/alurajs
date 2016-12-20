@@ -2,24 +2,17 @@ class HttpService {
 
     get(url) {
 
-        return new Promise((resolve, reject) => {
+        return fetch(url)
+        .then(res => this._handleErrors(res))
+        .then(res => res.json());
+    }
 
-            let xhr = new XMLHttpRequest();
+    _handleErrors(res) {
 
-            xhr.open('GET', url);
+        if (! res.ok) {
+            throw new Error(res.statusText);
+        }
 
-            xhr.onreadystatechange = function() {
-
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        resolve(JSON.parse(xhr.responseText))
-                    } else {
-                        reject(xhr.responseText);
-                    }
-                }
-            };
-
-            xhr.send();
-        });
+        return res;
     }
 }
